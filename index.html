@@ -1,9 +1,12 @@
 <!DOCTYPE html>
+
 <html>
 <head>
 <title>DamonGames</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script>
+let supabaseClient;
+</script>
 
 <style>
 body{
@@ -33,6 +36,7 @@ margin-top:12px;
 cursor:pointer;
 }
 </style>
+
 </head>
 
 <body>
@@ -47,16 +51,18 @@ cursor:pointer;
 <p id="msg"></p>
 </div>
 
+<script src="https://unpkg.com/@supabase/supabase-js"></script>
+
 <script>
-const supabase = window.supabase.createClient(
-"https://qinhyibeeqktldlilqcm.supabase.co",
-"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFpbmh5aWJlZXFrdGxkbGlscWNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MzU2MDQsImV4cCI6MjA4OTAxMTYwNH0.QKMgKbay88cIxLVVfCm6FyiqfYYL4D_Fxy1mK2R92CU"
-);
+const supabaseUrl = "https://qinhyibeeqktldlilqcm.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFpbmh5aWJlZXFrdGxkbGlscWNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MzU2MDQsImV4cCI6MjA4OTAxMTYwNH0.QKMgKbay88cIxLVVfCm6FyiqfYYL4D_Fxy1mK2R92CU";
+
+supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
 async function checkKey(){
 let key = document.getElementById("keyInput").value;
 
-let { data, error } = await supabase
+let { data, error } = await supabaseClient
 .from("invite_keys")
 .select("*")
 .eq("key", key)
