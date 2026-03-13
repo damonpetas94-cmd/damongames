@@ -64,51 +64,27 @@ font-size: 24px;
 </div>
 
 <script>
-window.onload = () => {
-
 const supabase = window.supabase.createClient(
 "https://qinhyibeegktldliiqcm.supabase.co",
 "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFpbmh5aWJlZXFrdGxkbGlscWNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MzU2MDQsImV4cCI6MjA4OTAxMTYwNH0.QKMgKbay88cIxLVVfCm6FyiqfYYL4D_Fxy1mK2R92CU"
 )
 
-window.login = async function() {
+async function login() {
 
 let key = document.getElementById("key").value
 
-try {
-
-let { data, error } = await supabase
+let response = await supabase
 .from("invite_keys")
 .select("*")
-.eq("key", key)
-.eq("used", false)
 
-if (error) {
-alert("Database error")
-console.log(error)
+console.log(response)
+
+if (response.error) {
+alert("REAL ERROR: " + response.error.message)
 return
 }
 
-if (data.length > 0) {
-
-await supabase
-.from("invite_keys")
-.update({ used: true })
-.eq("key", key)
-
-document.getElementById("loginBox").style.display = "none"
-document.getElementById("successBox").style.display = "block"
-
-} else {
-alert("INVALID OR USED KEY")
-}
-
-} catch(e) {
-alert("System error")
-console.log(e)
-}
-
-}
+alert("DATABASE CONNECTED SUCCESS")
 
 }
 </script>
