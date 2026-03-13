@@ -60,7 +60,7 @@ async function login(){
 const key = document.getElementById("key").value
 
 const { data, error } = await supabase
-.from("keys")
+.from("invite_keys")
 .select("*")
 .eq("key", key)
 
