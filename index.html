@@ -4,8 +4,6 @@
 <head>
 <title>DamonGames</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
 body {
 background: #0a0a0a;
@@ -14,14 +12,12 @@ font-family: Arial;
 text-align: center;
 margin-top: 120px;
 }
-
 .box {
 background: #111;
 padding: 40px;
 border-radius: 10px;
 display: inline-block;
 }
-
 input {
 padding: 12px;
 width: 260px;
@@ -30,7 +26,6 @@ background: #000;
 border: 1px solid #333;
 color: white;
 }
-
 button {
 padding: 12px;
 width: 280px;
@@ -40,7 +35,6 @@ border: none;
 font-weight: bold;
 cursor: pointer;
 }
-
 .success {
 color: lime;
 font-size: 24px;
@@ -63,30 +57,48 @@ font-size: 24px;
 <p>Welcome to DamonGames</p>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
+window.addEventListener("load", () => {
+
 const supabase = window.supabase.createClient(
 "https://qinhyibeegktldliiqcm.supabase.co",
 "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFpbmh5aWJlZXFrdGxkbGlscWNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MzU2MDQsImV4cCI6MjA4OTAxMTYwNH0.QKMgKbay88cIxLVVfCm6FyiqfYYL4D_Fxy1mK2R92CU"
 )
 
-async function login() {
+window.login = async function() {
 
 let key = document.getElementById("key").value
 
-let response = await supabase
+let { data, error } = await supabase
 .from("invite_keys")
 .select("*")
+.eq("key", key)
+.eq("used", false)
 
-console.log(response)
-
-if (response.error) {
-alert("REAL ERROR: " + response.error.message)
+if (error) {
+alert("ERROR: " + error.message)
 return
 }
 
-alert("DATABASE CONNECTED SUCCESS")
+if (data.length > 0) {
+
+await supabase
+.from("invite_keys")
+.update({ used: true })
+.eq("key", key)
+
+document.getElementById("loginBox").style.display = "none"
+document.getElementById("successBox").style.display = "block"
+
+} else {
+alert("INVALID KEY")
+}
 
 }
+
+})
 </script>
 
 </body>
