@@ -64,20 +64,30 @@ font-size: 24px;
 </div>
 
 <script>
+window.onload = () => {
+
 const supabase = window.supabase.createClient(
 "https://qinhyibeegktldliiqcm.supabase.co",
-"sb_publishable_T3BHMa0aYn4OlA6VRfOtXA_S5xYOQOr"
+"PASTE_YOUR_PUBLISHABLE_KEY"
 )
 
-async function login() {
+window.login = async function() {
 
 let key = document.getElementById("key").value
 
-let { data } = await supabase
+try {
+
+let { data, error } = await supabase
 .from("invite_keys")
 .select("*")
 .eq("key", key)
 .eq("used", false)
+
+if (error) {
+alert("Database error")
+console.log(error)
+return
+}
 
 if (data.length > 0) {
 
@@ -91,6 +101,13 @@ document.getElementById("successBox").style.display = "block"
 
 } else {
 alert("INVALID OR USED KEY")
+}
+
+} catch(e) {
+alert("System error")
+console.log(e)
+}
+
 }
 
 }
