@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>DamonGames</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+body {
+background: #0a0a0a;
+color: white;
+font-family: Arial;
+text-align: center;
+margin-top: 120px;
+}
+
+.box {
+background: #111;
+padding: 40px;
+border-radius: 10px;
+display: inline-block;
+}
+
+input {
+padding: 12px;
+width: 260px;
+margin-top: 15px;
+background: #000;
+border: 1px solid #333;
+color: white;
+}
+
+button {
+padding: 12px;
+width: 280px;
+margin-top: 20px;
+background: lime;
+border: none;
+font-weight: bold;
+cursor: pointer;
+}
+
+.success {
+color: lime;
+font-size: 24px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="box" id="loginBox">
+<h1>DamonGames</h1>
+<input id="key" placeholder="Enter Invite Key">
+<br>
+<button onclick="login()">Enter</button>
+</div>
+
+<div id="successBox" style="display:none">
+<h1 class="success">ACCESS GRANTED</h1>
+<p>Welcome to DamonGames</p>
+</div>
+
+<script>
+const supabase = window.supabase.createClient(
+"https://qinhyibeegktldliiqcm.supabase.co",
+"sb_publishable_T3BHMa0aYn4OlA6VRfOtXA_S5xYOQOr"
+)
+
+async function login() {
+
+let key = document.getElementById("key").value
+
+let { data } = await supabase
+.from("invite_keys")
+.select("*")
+.eq("key", key)
+.eq("used", false)
+
+if (data.length > 0) {
+
+await supabase
+.from("invite_keys")
+.update({ used: true })
+.eq("key", key)
+
+document.getElementById("loginBox").style.display = "none"
+document.getElementById("successBox").style.display = "block"
+
+} else {
+alert("INVALID OR USED KEY")
+}
+
+}
+</script>
+
+</body>
+</html>
