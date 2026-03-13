@@ -3,8 +3,10 @@
 <head>
 <title>DamonGames</title>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
 <style>
-body{
+body {
 background:black;
 color:white;
 font-family:Arial;
@@ -12,30 +14,66 @@ text-align:center;
 margin-top:150px;
 }
 
-.box{
+.box {
 background:#111;
 padding:40px;
 display:inline-block;
 border-radius:10px;
 }
-</style>
 
+input {
+padding:10px;
+font-size:18px;
+}
+
+button {
+padding:10px 20px;
+font-size:18px;
+margin-top:10px;
+cursor:pointer;
+}
+</style>
 </head>
+
 <body>
 
 <div class="box">
 <h1>DamonGames</h1>
-<input id="key" placeholder="Enter Invite Key">
-<br><br>
-<button onclick="login()">Enter</button>
+
+<input id="keyInput" placeholder="Enter Invite Key">
+<br>
+<button onclick="checkKey()">Enter</button>
+
+<p id="msg"></p>
 </div>
 
 <script>
+const supabase = window.supabase.createClient(
+"https://qinhyibeeqktldlilqcm.supabase.co",
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFpbmh5aWJlZXFrdGxkbGlscWNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MzU2MDQsImV4cCI6MjA4OTAxMTYwNH0.QKMgKbay88cIxLVVfCm6FyiqfYYL4D_Fxy1mK2R92CU"
+);
 
-function login(){
-alert("BUTTON WORKS")
+async function checkKey() {
+let key = document.getElementById("keyInput").value;
+
+let { data, error } = await supabase
+.from("invite_keys")
+.select("*")
+.eq("key", key)
+.eq("used", false);
+
+if (error) {
+document.getElementById("msg").innerText = "Database error";
+return;
 }
 
+if (data.length > 0) {
+document.getElementById("msg").innerText = "Access granted";
+window.location.href = "games.html";
+} else {
+document.getElementById("msg").innerText = "Invalid key";
+}
+}
 </script>
 
 </body>
